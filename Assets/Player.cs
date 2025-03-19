@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float moveSpeed = 6, lookSpeed = 150;
+    public float moveSpeed = 6, lookSpeed = 150, jumpSpeed = 25;
     private Rigidbody rb;
 
     // Start is called before the first frame update
@@ -32,6 +32,10 @@ public class Player : MonoBehaviour
         Vector3 right   = transform.right   * Input.GetAxis("Horizontal");
 
         Vector3 moveDir = forward + right;
-        rb.velocity = moveDir * moveSpeed;
+        rb.velocity = moveDir * moveSpeed + transform.up * rb.velocity.y;
+
+        // Jumping
+        bool onGround = Physics.Raycast(transform.position, -transform.up, 0.15f);
+        if (onGround && Input.GetAxis("Jump") != 0) rb.AddForce(transform.up * jumpSpeed);
     }
 }
